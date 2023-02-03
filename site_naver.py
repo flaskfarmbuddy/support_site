@@ -146,7 +146,10 @@ class SiteNaverMovie(SiteNaver):
     def info_video(cls, code, entity):
         try:
             url = 'https://movie.naver.com/movie/bi/mi/media.nhn?code=%s' % code[2:]
-            root = html.fromstring(requests.get(url).text)
+            s = requests.Session()
+            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
+            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            root = html.fromstring(s.get(url).text)
             tags = root.xpath('//div[@class="video"]')
             if not tags:
                 return
@@ -182,7 +185,10 @@ class SiteNaverMovie(SiteNaver):
             page = 1
             while True:
                 url = 'https://movie.naver.com/movie/bi/mi/photoListJson.nhn?movieCode=%s&size=100&offset=%s' % (code[2:], (page-1)*100)
-                data = requests.get(url).json()['lists']
+                s = requests.Session()
+                s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
+                s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+                data = s.get(url).json()['lists']
                 poster_count = 0
                 art_count = 0
                 max_art_count = 10
@@ -222,7 +228,10 @@ class SiteNaverMovie(SiteNaver):
     def info_detail(cls, code, entity):
         try:
             url = 'https://movie.naver.com/movie/bi/mi/detail.nhn?code=%s' % code[2:]
-            root = html.fromstring(requests.get(url).text)
+            s = requests.Session()
+            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
+            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            root = html.fromstring(s.get(url).text)
             tags = root.xpath('//ul[@class="lst_people"]/li')
             if tags:
                 for tag in tags:
@@ -272,7 +281,10 @@ class SiteNaverMovie(SiteNaver):
             url = 'https://movie.naver.com/movie/bi/mi/basic.nhn?code=%s' % code[2:]
             logger.debug(url)
             entity.code_list.append(['naver_id', code[2:]])
-            text = requests.get(url, headers=cls.default_headers).text
+            s = requests.Session()
+            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
+            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            text = s.get(url, headers=cls.default_headers).text
             root = html.fromstring(text)
             tags = root.xpath('//div[@class="mv_info"]')
             if tags:
@@ -348,7 +360,10 @@ class SiteNaverMovie(SiteNaver):
             if tmps[0].startswith('MN'):
                 tmps[0] = tmps[0][2:]
             url = 'https://movie.naver.com/movie/bi/mi/mediaView.nhn?code=%s&mid=%s' % (tmps[0], tmps[1])
-            root = html.fromstring(requests.get(url).text)
+            s = requests.Session()
+            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
+            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            root = html.fromstring(s.get(url).text)
             tmp = root.xpath('//iframe[@class="_videoPlayer"]')[0].attrib['src']
             match = re.search(r'&videoId=(.*?)&videoInKey=(.*?)&', tmp)
             if match:
