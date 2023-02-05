@@ -22,6 +22,8 @@ class ModuleSite(PluginModuleBase):
         'site_tving_proxy_url' : '',
 
         'site_naver_key': '',
+        'site_naver_nid_aut': '',
+        'site_naver_nid_ses': '',
     }
 
     def __init__(self, P):

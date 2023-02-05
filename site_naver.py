@@ -30,6 +30,11 @@ class SiteNaverMovie(SiteNaver):
     module_char = 'M'
     site_char = 'N'
 
+    # nova: 관련 키 직접 가져오기
+    _naver_key = P.ModelSetting.get('site_naver_key')
+    _naver_nid_aut = P.ModelSetting.get('site_naver_nid_aut')
+    _naver_nid_ses = P.ModelSetting.get('site_naver_nid_ses')
+
     @classmethod 
     def search(cls, keyword, year=1900):
         try:
@@ -147,8 +152,8 @@ class SiteNaverMovie(SiteNaver):
         try:
             url = 'https://movie.naver.com/movie/bi/mi/media.nhn?code=%s' % code[2:]
             s = requests.Session()
-            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
-            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            s.cookies.set("NID_AUT", cls._naver_nid_aut)    # nova: 성인 인증 우회용 쿠키
+            s.cookies.set("NID_SES", cls._naver_nid_ses)    # nova: 성인 인증 우회용 쿠키
             root = html.fromstring(s.get(url).text)
             tags = root.xpath('//div[@class="video"]')
             if not tags:
@@ -186,8 +191,8 @@ class SiteNaverMovie(SiteNaver):
             while True:
                 url = 'https://movie.naver.com/movie/bi/mi/photoListJson.nhn?movieCode=%s&size=100&offset=%s' % (code[2:], (page-1)*100)
                 s = requests.Session()
-                s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
-                s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+                s.cookies.set("NID_AUT", cls._naver_nid_aut)    # nova
+                s.cookies.set("NID_SES", cls._naver_nid_ses)    # nova
                 data = s.get(url).json()['lists']
                 poster_count = 0
                 art_count = 0
@@ -229,8 +234,8 @@ class SiteNaverMovie(SiteNaver):
         try:
             url = 'https://movie.naver.com/movie/bi/mi/detail.nhn?code=%s' % code[2:]
             s = requests.Session()
-            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
-            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            s.cookies.set("NID_AUT", cls._naver_nid_aut)
+            s.cookies.set("NID_SES", cls._naver_nid_ses)
             root = html.fromstring(s.get(url).text)
             tags = root.xpath('//ul[@class="lst_people"]/li')
             if tags:
@@ -282,8 +287,8 @@ class SiteNaverMovie(SiteNaver):
             logger.debug(url)
             entity.code_list.append(['naver_id', code[2:]])
             s = requests.Session()
-            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
-            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            s.cookies.set("NID_AUT", cls._naver_nid_aut)
+            s.cookies.set("NID_SES", cls._naver_nid_ses)
             text = s.get(url, headers=cls.default_headers).text
             root = html.fromstring(text)
             tags = root.xpath('//div[@class="mv_info"]')
@@ -325,6 +330,8 @@ class SiteNaverMovie(SiteNaver):
                                 entity.genre.append(tmp.text_content().strip())
                         elif href.find('nation=') != -1:
                             tmp = a_tag[0].text_content().strip()
+                            if tmp == u'대한민국':  # nova: 네이버는 한국이 아니라 대한민국
+                                tmp = u'한국'
                             entity.country.append(tmp)
                             if tmp == u'한국':
                                 entity.originaltitle = entity.extra_info['title_ko']
@@ -361,8 +368,8 @@ class SiteNaverMovie(SiteNaver):
                 tmps[0] = tmps[0][2:]
             url = 'https://movie.naver.com/movie/bi/mi/mediaView.nhn?code=%s&mid=%s' % (tmps[0], tmps[1])
             s = requests.Session()
-            s.cookies.set("NID_AUT", "SLo4ROuheK180S7byLkpbeIaT5e61fR1Pq7BF0+F0B1zfHCrtqywtR2j1MnDXX9x")
-            s.cookies.set("NID_SES", "AAABnr3d7rqiak3Qp0bhq6KNzvjJoQlUWMEnHQl/PLqFLnWUwmyGdAZBjBnFOMD+Wt/Mx0bEeVskJOWokl6hH2Y4odozxQfzh7G0KuEsDKr19VUmk2qLsXmOybIOTbI13NMk7ZWUEHTBk65rR4/LzepiiO5WSJTWiQPe1d0924Lu4HFmQBZ8fn15eEWpe4pPDTX5QK81RwcvJdOLa1KOhTjAwkJs97cVzYPYTKSeOgU2dGA8w7QkwyrmCA1bWDUeNJNN/iIf88P5Ay4nSDH20DylF+OaSfyiHipqi4/2oqeta7l3qWKh2JFGdltpoFH1c+owq9yLrou+kPJhDU9/3/uh3UVt6xmpXJGXE+cV27MsXR6tkgp0STA1UNOWdCn7/bBtjGCPKyzP9NgGm8WHa2oNYYTJl/xej9AZbJLHHrTu6E/SDzrI7VtHoumrDzeQ08Ib8Yd37WVYHLHSbKsL/GdGqFe79T1IhyZNnXqA1DWcllxe+OokjfRLahhbae9VwNK1FcfGmyOzCy3YO0bW7QcekL+BKX+RYQRKKWa1pi4aaA5C")
+            s.cookies.set("NID_AUT", cls._naver_nid_aut)
+            s.cookies.set("NID_SES", cls._naver_nid_ses)
             root = html.fromstring(s.get(url).text)
             tmp = root.xpath('//iframe[@class="_videoPlayer"]')[0].attrib['src']
             match = re.search(r'&videoId=(.*?)&videoInKey=(.*?)&', tmp)
